@@ -10,209 +10,225 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <title>Optimizare Curse</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<!-- QR library -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3352;
   --accent:#4f8ef7;--accent2:#f7944f;--green:#3ecf6e;--red:#f75f5f;
-  --text:#e8ecf4;--muted:#7a82a0;--radius:10px;
+  --text:#e8ecf4;--muted:#7a82a0;--r:10px;
 }
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+html,body{height:100%;height:100dvh;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden;}
 
-/* HEADER */
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
-.logo{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-header h1{font-size:16px;font-weight:700;}
-header p{font-size:11px;color:var(--muted);margin-top:1px;}
-.km-badge{margin-left:auto;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);display:none;white-space:nowrap;}
+/* ── HEADER ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:11px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;z-index:30;}
+.logo{width:32px;height:32px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.logo-text h1{font-size:15px;font-weight:700;}
+.logo-text p{font-size:11px;color:var(--muted);}
+.km-badge{margin-left:auto;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:12px;color:var(--green);display:none;white-space:nowrap;font-variant-numeric:tabular-nums;}
 
-/* INSTALL BANNER */
-.install-banner{background:linear-gradient(135deg,#1e2d5a,#22263a);border-bottom:1px solid var(--accent);padding:10px 20px;display:flex;align-items:center;gap:12px;font-size:13px;}
-.install-banner span{flex:1;color:var(--text);}
+/* ── INSTALL BANNER ── */
+.install-banner{background:linear-gradient(135deg,#1e2d5a,#22263a);border-bottom:1px solid var(--accent);padding:9px 16px;display:none;align-items:center;gap:10px;flex-shrink:0;}
+.install-banner span{flex:1;font-size:13px;}
 .install-banner strong{color:var(--accent);}
-.install-banner .btn-install{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
-.install-banner .btn-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 4px;}
+.btn-install{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;}
+.btn-close-banner{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;}
 
-/* LAYOUT */
-.main{display:grid;grid-template-columns:390px 1fr;flex:1;height:calc(100dvh - 65px);}
+/* ── TAB BAR (mobile) ── */
+.tab-bar{display:none;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tab-bar button{flex:1;background:none;border:none;color:var(--muted);padding:11px 0;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.tab-bar button.active{color:var(--accent);border-bottom-color:var(--accent);}
 
-/* PANEL */
-.panel{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.panel-top{padding:16px 18px;border-bottom:1px solid var(--border);}
-.panel-top h2{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;}
-.start-input-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;display:flex;align-items:center;gap:9px;margin-bottom:9px;}
-.dot-start{width:9px;height:9px;border-radius:50%;background:var(--green);flex-shrink:0;}
-.start-input-wrap input{background:none;border:none;outline:none;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;width:100%;}
-.start-input-wrap input::placeholder{color:var(--muted);}
-.add-row{display:flex;gap:8px;margin-bottom:5px;}
-.add-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s;min-width:0;}
+/* ── MAIN CONTENT ── */
+.content{flex:1;display:flex;overflow:hidden;min-height:0;}
+
+/* ── PANEL ── */
+.panel{width:380px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.panel-top{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.section-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:11px;}
+.input-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.dot.green{background:var(--green);}
+.input-wrap input{background:none;border:none;outline:none;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;width:100%;}
+.input-wrap input::placeholder{color:var(--muted);}
+.add-row{display:flex;gap:7px;margin-bottom:5px;}
+.add-row input{flex:1;min-width:0;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;}
 .add-row input:focus{border-color:var(--accent);}
 .add-row input::placeholder{color:var(--muted);}
-.btn{background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:9px 13px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap;font-family:'Inter',sans-serif;}
-.btn:hover{opacity:.85}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn.secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text);}
-.btn.green{background:var(--green);color:#0f1117;}
-.btn.orange{background:var(--accent2);}
-.btn.whatsapp{background:#25d366;color:#fff;}
-.hint{font-size:11px;color:var(--muted);margin-top:3px;}
+.hint{font-size:11px;color:var(--muted);}
 
-/* ADDR LIST */
-.addr-list{flex:1;overflow-y:auto;padding:14px 18px;}
-.addr-list::-webkit-scrollbar{width:4px;}
+/* ── ADDR LIST ── */
+.addr-list{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch;}
+.addr-list::-webkit-scrollbar{width:3px;}
 .addr-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.addr-item{display:flex;align-items:center;gap:9px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:9px 11px;margin-bottom:7px;transition:border-color .15s;}
+.empty-list{text-align:center;padding:40px 0;color:var(--muted);font-size:13px;}
+.empty-list .ei{font-size:28px;margin-bottom:8px;}
+
+.addr-item{display:flex;align-items:center;gap:9px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 11px;margin-bottom:8px;}
 .addr-item.optimized{border-color:var(--accent);}
 .addr-item.done{opacity:.35;}
-.addr-num{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.addr-num.orig{background:var(--surface);border:1px solid var(--border);color:var(--muted);}
-.addr-text{flex:1;font-size:13px;line-height:1.4;min-width:0;}
-.addr-text>div:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.addr-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.km-seg{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);}
-.addr-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:3px 5px;border-radius:4px;flex-shrink:0;}
-.addr-del:hover{color:var(--red);}
-.done-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:3px 4px;flex-shrink:0;}
-.done-btn:hover{color:var(--green);}
+.num{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.num.orig{background:var(--surface);border:1px solid var(--border);color:var(--muted);}
+.addr-body{flex:1;min-width:0;}
+.addr-raw{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.addr-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.addr-km{font-size:10px;color:var(--accent2);margin-top:1px;font-variant-numeric:tabular-nums;}
+.ic-btn{background:none;border:none;cursor:pointer;padding:4px 5px;border-radius:5px;font-size:15px;flex-shrink:0;color:var(--muted);}
+.ic-btn:hover{color:var(--green);}
+.ic-btn.del:hover{color:var(--red);}
 
-/* PANEL ACTIONS */
-.panel-actions{padding:14px 18px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
-.actions-row{display:flex;gap:8px;}
-.share-row{display:flex;gap:8px;}
+/* ── PANEL ACTIONS ── */
+.panel-actions{padding:13px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
+.row{display:flex;gap:7px;}
 
-/* MAP */
-.map-area{position:relative;background:var(--bg);}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .15s,transform .1s;white-space:nowrap;}
+.btn:hover{opacity:.87}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn.green{background:var(--green);color:#0f1117;}
+.btn.orange{background:var(--accent2);}
+.btn.wa{background:#25d366;}
+.btn.ghost{background:var(--surface2);border:1px solid var(--border);color:var(--text);}
+.btn.icon{padding:10px 11px;}
+
+/* ── MAP ── */
+.map-wrap{flex:1;position:relative;min-width:0;}
 #map{width:100%;height:100%;}
-.map-overlay{position:absolute;top:14px;left:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;min-width:200px;z-index:10;display:none;}
-.map-overlay h3{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
-.stat-label{font-size:12px;color:var(--muted);}
-.stat-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;}
-.stat-val.green{color:var(--green);}.stat-val.orange{color:var(--accent2);}
-.empty-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);pointer-events:none;}
-.empty-state .icon{font-size:44px;opacity:.3;}
-.empty-state p{font-size:13px;opacity:.5;}
+.map-stats{position:absolute;top:12px;left:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 15px;z-index:10;display:none;min-width:180px;}
+.map-stats h3{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;}
+.srow{display:flex;justify-content:space-between;gap:16px;margin-bottom:4px;}
+.sl{font-size:12px;color:var(--muted);}
+.sv{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;}
+.sv.g{color:var(--green);}.sv.o{color:var(--accent2);}
+.map-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);pointer-events:none;}
+.map-empty .ei{font-size:40px;opacity:.25;}
+.map-empty p{font-size:13px;opacity:.5;}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 16px;font-size:13px;z-index:1000;transform:translateY(80px);opacity:0;transition:all .3s ease;max-width:320px;}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.error{border-color:var(--red);color:var(--red);}
-.toast.success{border-color:var(--green);color:var(--green);}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 18px;font-size:13px;z-index:500;opacity:0;transition:all .28s ease;white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.ok{border-color:var(--green);color:var(--green);}
+.toast.err{border-color:var(--red);color:var(--red);}
 
-/* LOADING BAR */
-.loading-bar{height:3px;background:var(--accent);width:0%;position:fixed;top:0;left:0;z-index:999;transition:width .4s ease;}
+/* ── LOADING ── */
+.lbar{height:3px;background:var(--accent);width:0;position:fixed;top:0;left:0;z-index:999;transition:width .35s ease;}
 
-/* QR MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:360px;width:100%;text-align:center;}
-.modal h3{font-size:16px;font-weight:700;margin-bottom:6px;}
-.modal p{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5;}
-#qrCanvas{display:flex;justify-content:center;margin-bottom:18px;}
-#qrCanvas canvas,#qrCanvas img{border-radius:8px;padding:10px;background:#fff;}
-.modal-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
-.modal-close{margin-top:14px;display:block;font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;}
+/* ── MODAL QR ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;max-width:320px;width:100%;text-align:center;}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:5px;}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+#qrBox{display:flex;justify-content:center;margin-bottom:16px;}
+#qrBox canvas,#qrBox img{border-radius:8px;padding:10px;background:#fff;}
+.modal .row{justify-content:center;flex-wrap:wrap;}
+.modal-close{display:block;margin-top:14px;font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;}
 
-/* MOBILE */
-@media(max-width:768px){
-  .main{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
-  .map-area{min-height:45vh;}
-  .panel{max-height:55vh;}
-  .panel-top{padding:12px 14px;}
-  .addr-list{padding:10px 14px;}
-  .panel-actions{padding:12px 14px;}
-  .toast{bottom:16px;right:16px;left:16px;max-width:none;}
-  .map-overlay{top:10px;left:10px;right:10px;min-width:unset;}
+/* ── DESKTOP ── */
+@media(min-width:769px){
+  .tab-bar{display:none!important;}
+  .panel{display:flex!important;}
+  .map-wrap{display:block!important;}
 }
-@media(max-width:400px){
-  header h1{font-size:14px;}
-  .km-badge{display:none!important;}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .panel{width:100%;border-right:none;border-bottom:1px solid var(--border);}
+  .tab-bar{display:flex;}
+  /* show/hide via tab */
+  .panel[data-hidden]{display:none;}
+  .map-wrap[data-hidden]{display:none;}
+  .map-stats{top:8px;left:8px;right:8px;min-width:unset;}
+  .toast{white-space:normal;text-align:center;}
 }
 </style>
 </head>
 <body>
 
-<div class="loading-bar" id="loadingBar"></div>
+<div class="lbar" id="lbar"></div>
 
-<!-- Install Banner (shown only when PWA installable) -->
-<div class="install-banner" id="installBanner" style="display:none">
-  <span>📱 <strong>Instalează</strong> aplicația pe ecranul telefonului</span>
+<div class="install-banner" id="installBanner">
+  <span>📱 <strong>Instalează</strong> pe ecranul telefonului</span>
   <button class="btn-install" id="btnInstall">Instalează</button>
-  <button class="btn-close" onclick="document.getElementById('installBanner').style.display='none'">×</button>
+  <button class="btn-close-banner" onclick="document.getElementById('installBanner').style.display='none'">×</button>
 </div>
 
 <header>
   <div class="logo">🚚</div>
-  <div>
+  <div class="logo-text">
     <h1>Optimizare Curse</h1>
     <p>Traseu minim, livrări maxime</p>
   </div>
-  <div class="km-badge" id="kmBadge">0 km</div>
+  <div class="km-badge" id="kmBadge"></div>
 </header>
 
-<div class="main">
+<!-- Tab bar – only visible on mobile -->
+<div class="tab-bar" id="tabBar">
+  <button id="tabAdrese" class="active" onclick="switchTab('adrese')">📍 Adrese</button>
+  <button id="tabHarta" onclick="switchTab('harta')">🗺️ Hartă</button>
+</div>
+
+<div class="content">
+
   <!-- PANEL -->
-  <div class="panel">
+  <div class="panel" id="panelAdrese">
     <div class="panel-top">
-      <h2>Puncte de livrare</h2>
-      <div class="start-input-wrap">
-        <div class="dot-start"></div>
-        <input type="text" id="startAddr" placeholder="Punct de plecare (ex: Str. Victoriei 1, Pitești)">
+      <div class="section-label">Puncte de livrare</div>
+
+      <div class="input-wrap">
+        <div class="dot green"></div>
+        <input id="startAddr" type="text" placeholder="Punct de plecare (ex: Str. Victoriei 1, Pitești)">
       </div>
+
       <div class="add-row">
-        <input type="text" id="newAddr" placeholder="Adaugă adresă de livrat…" autocomplete="off">
+        <input id="newAddr" type="text" placeholder="Adaugă adresă de livrat…" autocomplete="off">
         <button class="btn" onclick="addAddress()">+ Adaugă</button>
       </div>
       <div class="hint">Apasă Enter sau butonul după fiecare adresă</div>
     </div>
 
     <div class="addr-list" id="addrList">
-      <div style="text-align:center;padding:40px 0;color:var(--muted);font-size:13px;">
-        <div style="font-size:32px;margin-bottom:8px;">📍</div>Adaugă adrese mai sus
-      </div>
+      <div class="empty-list"><div class="ei">📍</div>Adaugă adrese mai sus</div>
     </div>
 
     <div class="panel-actions">
-      <div class="actions-row">
-        <button class="btn green" style="flex:1" id="btnOptimize" onclick="optimizeRoute()">⚡ Optimizează traseul</button>
-        <button class="btn secondary" onclick="clearAll()" title="Șterge tot">🗑</button>
+      <div class="row">
+        <button class="btn green" id="btnOpt" style="flex:1" onclick="optimizeRoute()">⚡ Optimizează traseul</button>
+        <button class="btn ghost icon" onclick="clearAll()" title="Șterge tot">🗑</button>
       </div>
-      <div class="share-row" id="shareRow" style="display:none">
-        <button class="btn orange" style="flex:1" onclick="showQR()">📲 QR traseu</button>
-        <button class="btn whatsapp" style="flex:1" onclick="shareWhatsApp()">WhatsApp</button>
-        <button class="btn secondary" onclick="copyRoute()" title="Copiază text">📋</button>
+      <div class="row" id="shareRow" style="display:none">
+        <button class="btn orange" style="flex:1" onclick="showQR()">📲 QR</button>
+        <button class="btn wa" style="flex:1" onclick="shareWA()">WhatsApp</button>
+        <button class="btn ghost icon" onclick="copyRoute()" title="Copiază text">📋</button>
       </div>
     </div>
   </div>
 
   <!-- MAP -->
-  <div class="map-area">
-    <div class="empty-state" id="emptyMap">
-      <div class="icon">🗺️</div>
-      <p>Harta apare după optimizare</p>
-    </div>
+  <div class="map-wrap" id="panelHarta" data-hidden="">
+    <div class="map-empty" id="mapEmpty"><div class="ei">🗺️</div><p>Harta apare după optimizare</p></div>
     <div id="map"></div>
-    <div class="map-overlay" id="statsOverlay">
+    <div class="map-stats" id="mapStats">
       <h3>Sumar traseu</h3>
-      <div class="stat-row"><span class="stat-label">Total km</span><span class="stat-val green" id="statKm">–</span></div>
-      <div class="stat-row"><span class="stat-label">Opriri</span><span class="stat-val" id="statStops">–</span></div>
-      <div class="stat-row"><span class="stat-label">Timp estimat</span><span class="stat-val orange" id="statTime">–</span></div>
+      <div class="srow"><span class="sl">Total km</span><span class="sv g" id="sKm">–</span></div>
+      <div class="srow"><span class="sl">Opriri</span><span class="sv" id="sStops">–</span></div>
+      <div class="srow"><span class="sl">Timp estimat</span><span class="sv o" id="sTime">–</span></div>
     </div>
   </div>
-</div>
 
-<!-- QR MODAL -->
-<div class="modal-overlay" id="qrModal" style="display:none" onclick="closeQR(event)">
+</div><!-- .content -->
+
+<!-- QR Modal -->
+<div class="overlay" id="qrOverlay" onclick="closeQR(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>📲 Scanează pe telefon</h3>
-    <p>Scanează cu camera telefonului pentru a vedea traseul optimizat</p>
-    <div id="qrCanvas"></div>
-    <div class="modal-actions">
-      <button class="btn orange" onclick="shareWhatsApp()">Trimite WhatsApp</button>
-      <button class="btn secondary" onclick="copyRoute()">📋 Copiază text</button>
+    <p>Deschide camera telefonului și scanează codul pentru a vedea traseul</p>
+    <div id="qrBox"></div>
+    <div class="row">
+      <button class="btn wa" onclick="shareWA();closeQRdirect()">WhatsApp</button>
+      <button class="btn ghost" onclick="copyRoute();closeQRdirect()">📋 Copiază</button>
     </div>
-    <span class="modal-close" onclick="document.getElementById('qrModal').style.display='none'">Închide</span>
+    <span class="modal-close" onclick="closeQRdirect()">Închide</span>
   </div>
 </div>
 
@@ -220,394 +236,319 @@ header p{font-size:11px;color:var(--muted);margin-top:1px;}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-
 <script>
-// ─── STATE ───────────────────────────────────────────────
-let addresses = [];
-let startPoint = null;
-let optimizedOrder = [];
-let map = null, markers = [], routeLine = null;
-let doneSet = new Set();
+// ── STATE ────────────────────────────────────────────────
+let addresses = [], startPoint = null, optimizedOrder = [];
+let map = null, markers = [], routeLine = null, doneSet = new Set();
 let deferredInstall = null;
 
-// ─── PWA ─────────────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
-}
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredInstall = e;
-  document.getElementById('installBanner').style.display = 'flex';
+// ── PWA ──────────────────────────────────────────────────
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredInstall=e;
+  document.getElementById('installBanner').style.display='flex';
 });
-document.getElementById('btnInstall').addEventListener('click', () => {
-  if (!deferredInstall) return;
+document.getElementById('btnInstall').onclick = ()=>{
+  if(!deferredInstall) return;
   deferredInstall.prompt();
-  deferredInstall.userChoice.then(() => {
-    document.getElementById('installBanner').style.display = 'none';
-    deferredInstall = null;
-  });
-});
-window.addEventListener('appinstalled', () => {
-  document.getElementById('installBanner').style.display = 'none';
-  toast('Aplicație instalată! 🎉', 'success');
-});
+  deferredInstall.userChoice.then(()=>{ document.getElementById('installBanner').style.display='none'; deferredInstall=null; });
+};
+window.addEventListener('appinstalled', ()=>{ document.getElementById('installBanner').style.display='none'; toast('Aplicație instalată! 🎉','ok'); });
 
-// ─── HELPERS ─────────────────────────────────────────────
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + (type || '');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => { el.className = 'toast'; }, 3500);
-}
-
-function setLoading(pct) {
-  document.getElementById('loadingBar').style.width = pct + '%';
-  if (pct >= 100) setTimeout(() => { document.getElementById('loadingBar').style.width = '0%'; }, 700);
-}
-
-// ─── GEOCODING ───────────────────────────────────────────
-function cleanAddr(addr) {
-  return addr
-    .replace(/\b(bl\.?|bloc)\s*[\w\d-]+/gi, '')
-    .replace(/\b(sc\.?|scara)\s*[\w\d-]+/gi, '')
-    .replace(/\b(ap\.?|apt\.?|apartament)\s*[\d]+/gi, '')
-    .replace(/\b(et\.?|etaj)\s*[\d]+/gi, '')
-    .replace(/,\s*,/g, ',').replace(/\s{2,}/g, ' ').trim().replace(/,\s*$/, '');
-}
-
-async function nominatimSearch(q) {
-  try {
-    const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ro&q=' + encodeURIComponent(q);
-    const res = await fetch(url, { headers: { 'Accept-Language': 'ro' } });
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data || !data.length) return null;
-    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), label: data[0].display_name };
-  } catch { return null; }
-}
-
-async function geocode(raw) {
-  const cleaned = cleanAddr(raw);
-  await sleep(200);
-  let r = await nominatimSearch(cleaned);
-  if (r) return r;
-  const parts = cleaned.split(',').map(s => s.trim()).filter(Boolean);
-  if (parts.length >= 3) {
-    await sleep(200);
-    r = await nominatimSearch(parts[0] + ', ' + parts[parts.length - 1]);
-    if (r) return r;
+// ── TAB SWITCHING (mobile) ───────────────────────────────
+function switchTab(tab){
+  const pa = document.getElementById('panelAdrese');
+  const ph = document.getElementById('panelHarta');
+  const ta = document.getElementById('tabAdrese');
+  const th = document.getElementById('tabHarta');
+  if(tab==='adrese'){
+    pa.removeAttribute('data-hidden'); ph.setAttribute('data-hidden','');
+    ta.classList.add('active'); th.classList.remove('active');
+  } else {
+    ph.removeAttribute('data-hidden'); pa.setAttribute('data-hidden','');
+    th.classList.add('active'); ta.classList.remove('active');
+    if(map) setTimeout(()=>map.invalidateSize(),50);
   }
-  if (parts.length >= 2) {
-    await sleep(200);
-    r = await nominatimSearch(parts[0] + ', Romania');
-    if (r) return r;
-  }
+}
+
+// ── HELPERS ──────────────────────────────────────────────
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function toast(msg, type){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show '+(type||'');
+  clearTimeout(el._t); el._t=setTimeout(()=>{ el.className='toast'; },3500);
+}
+function setLoad(p){
+  document.getElementById('lbar').style.width=p+'%';
+  if(p>=100) setTimeout(()=>{ document.getElementById('lbar').style.width='0%'; },700);
+}
+
+// ── GEOCODING ────────────────────────────────────────────
+function cleanAddr(a){
+  return a
+    .replace(/\b(bl\.?|bloc)\s*[\w\d-]+/gi,'')
+    .replace(/\b(sc\.?|scara)\s*[\w\d-]+/gi,'')
+    .replace(/\b(ap\.?|apt\.?|apartament)\s*\d+/gi,'')
+    .replace(/\b(et\.?|etaj)\s*\d+/gi,'')
+    .replace(/,\s*,/g,',').replace(/\s{2,}/g,' ').trim().replace(/,\s*$/,'');
+}
+async function nom(q){
+  try{
+    const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ro&q='+encodeURIComponent(q),{headers:{'Accept-Language':'ro'}});
+    if(!r.ok) return null;
+    const d=await r.json();
+    if(!d||!d.length) return null;
+    return {lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon),label:d[0].display_name};
+  }catch{return null;}
+}
+async function geocode(raw){
+  const c=cleanAddr(raw);
+  await sleep(200); let r=await nom(c); if(r) return r;
+  const pts=c.split(',').map(s=>s.trim()).filter(Boolean);
+  if(pts.length>=3){ await sleep(200); r=await nom(pts[0]+', '+pts[pts.length-1]); if(r) return r; }
+  if(pts.length>=2){ await sleep(200); r=await nom(pts[0]+', Romania'); if(r) return r; }
   return null;
 }
 
-// ─── DISTANCE ────────────────────────────────────────────
-function dist(a, b) {
-  if (!a || !b || a.lat == null || b.lat == null) return 999999;
-  const R = 6371, dLat = (b.lat-a.lat)*Math.PI/180, dLng = (b.lng-a.lng)*Math.PI/180;
-  const h = Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.asin(Math.sqrt(Math.min(1, h)));
+// ── DISTANCE ─────────────────────────────────────────────
+function dist(a,b){
+  if(!a||!b||a.lat==null||b.lat==null) return 999999;
+  const R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180;
+  const h=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.asin(Math.sqrt(Math.min(1,h)));
 }
 
-// ─── NEAREST NEIGHBOUR ───────────────────────────────────
-function nearestNeighbour(pts, start) {
-  const n = pts.length, visited = new Array(n).fill(false), order = [];
-  let cur = start;
-  for (let i = 0; i < n; i++) {
-    let best = -1, bestD = Infinity;
-    for (let j = 0; j < n; j++) { if (!visited[j]) { const d = dist(cur, pts[j]); if (d < bestD) { bestD = d; best = j; } } }
-    if (best === -1) break;
-    visited[best] = true; order.push(best); cur = pts[best];
+// ── NEAREST NEIGHBOUR ────────────────────────────────────
+function nn(pts,start){
+  const n=pts.length,vis=new Array(n).fill(false),ord=[];
+  let cur=start;
+  for(let i=0;i<n;i++){
+    let best=-1,bd=Infinity;
+    for(let j=0;j<n;j++) if(!vis[j]){const d=dist(cur,pts[j]);if(d<bd){bd=d;best=j;}}
+    if(best===-1) break;
+    vis[best]=true; ord.push(best); cur=pts[best];
   }
-  return order;
+  return ord;
 }
 
-// ─── 2-OPT ───────────────────────────────────────────────
-function twoOpt(order, pts, start) {
-  const n = order.length;
-  if (n <= 2) return order;
-  // nodes: 0=start, 1..n = pts in order
-  const nodes = [start, ...order.map(k => pts[k])];
-  const sz = nodes.length;
-  const dm = [];
-  for (let i = 0; i < sz; i++) { dm[i] = new Float64Array(sz); for (let j = 0; j < sz; j++) dm[i][j] = dist(nodes[i], nodes[j]); }
-
-  // seq[k] = which original-order slot is at position k (values 0..n-1)
-  let seq = Array.from({length: n}, (_, k) => k);
-
-  function rLen(s) {
-    let d = dm[0][s[0]+1];
-    for (let k = 0; k < s.length-1; k++) d += dm[s[k]+1][s[k+1]+1];
-    return d;
-  }
-
-  let best = seq.slice(), bestLen = rLen(best), improved = true, iter = 0;
-  while (improved && iter < 200) {
-    improved = false; iter++;
-    for (let i = 0; i < n-1; i++) {
-      for (let j = i+2; j < n; j++) {
-        const cand = best.slice();
-        let l = i+1, r = j;
-        while (l < r) { [cand[l], cand[r]] = [cand[r], cand[l]]; l++; r--; }
-        const cLen = rLen(cand);
-        if (cLen < bestLen - 0.0001) { best = cand; bestLen = cLen; improved = true; }
+// ── 2-OPT ────────────────────────────────────────────────
+function twoOpt(order,pts,start){
+  const n=order.length; if(n<=2) return order;
+  const nodes=[start,...order.map(k=>pts[k])];
+  const sz=nodes.length;
+  const dm=[];
+  for(let i=0;i<sz;i++){dm[i]=new Float64Array(sz);for(let j=0;j<sz;j++) dm[i][j]=dist(nodes[i],nodes[j]);}
+  function rLen(s){let d=dm[0][s[0]+1];for(let k=0;k<s.length-1;k++) d+=dm[s[k]+1][s[k+1]+1];return d;}
+  let best=Array.from({length:n},(_,k)=>k),bl=rLen(best),imp=true,it=0;
+  while(imp&&it<200){
+    imp=false;it++;
+    for(let i=0;i<n-1;i++){
+      for(let j=i+2;j<n;j++){
+        const c=best.slice();let l=i+1,r=j;
+        while(l<r){[c[l],c[r]]=[c[r],c[l]];l++;r--;}
+        const cl=rLen(c);if(cl<bl-0.0001){best=c;bl=cl;imp=true;}
       }
     }
   }
-  return best.map(k => order[k]);
+  return best.map(k=>order[k]);
 }
 
-// ─── RENDER LIST ─────────────────────────────────────────
-function renderList() {
-  const list = document.getElementById('addrList');
-  if (!addresses.length) {
-    list.innerHTML = '<div style="text-align:center;padding:36px 0;color:var(--muted);font-size:13px;"><div style="font-size:30px;margin-bottom:8px;">📍</div>Adaugă adrese mai sus</div>';
-    return;
-  }
-  const showOpt = optimizedOrder.length > 0;
-  list.innerHTML = addresses.map((a, i) => {
-    const pos = showOpt ? optimizedOrder.indexOf(i) : -1;
-    const num = (showOpt && pos >= 0) ? pos+1 : i+1;
-    const isDone = doneSet.has(i);
-    let segKm = '';
-    if (showOpt && pos === 0 && startPoint) segKm = dist(startPoint, a).toFixed(1) + ' km de la start';
-    else if (showOpt && pos > 0) segKm = dist(addresses[optimizedOrder[pos-1]], a).toFixed(1) + ' km';
-    return '<div class="addr-item' + (showOpt && pos>=0 ? ' optimized' : '') + (isDone ? ' done' : '') + '">' +
-      '<div class="addr-num' + (showOpt && pos>=0 ? '' : ' orig') + '">' + num + '</div>' +
-      '<div class="addr-text"><div title="' + escHtml(a.raw) + '">' + escHtml(a.raw) + '</div>' +
-      (segKm ? '<div class="km-seg">↑ ' + segKm + '</div>' : '') +
-      (a.lat != null ? '<div class="addr-sub">📍 Geocodat</div>' : '<div class="addr-sub" style="color:var(--red)">⚠ Negăsit – adaugă orașul</div>') +
-      '</div>' +
-      '<button class="done-btn" onclick="toggleDone(' + i + ')">' + (isDone?'↩️':'✓') + '</button>' +
-      '<button class="addr-del" onclick="removeAddr(' + i + ')">×</button></div>';
+// ── RENDER LIST ──────────────────────────────────────────
+function renderList(){
+  const list=document.getElementById('addrList');
+  if(!addresses.length){ list.innerHTML='<div class="empty-list"><div class="ei">📍</div>Adaugă adrese mai sus</div>'; return; }
+  const showOpt=optimizedOrder.length>0;
+  list.innerHTML=addresses.map((a,i)=>{
+    const pos=showOpt?optimizedOrder.indexOf(i):-1;
+    const num=(showOpt&&pos>=0)?pos+1:i+1;
+    const isDone=doneSet.has(i);
+    let km='';
+    if(showOpt&&pos===0&&startPoint) km=dist(startPoint,a).toFixed(1)+' km de la start';
+    else if(showOpt&&pos>0) km=dist(addresses[optimizedOrder[pos-1]],a).toFixed(1)+' km de la precedentul';
+    return '<div class="addr-item'+(showOpt&&pos>=0?' optimized':'')+(isDone?' done':'')+'">'+
+      '<div class="num'+(showOpt&&pos>=0?'':' orig')+'">'+num+'</div>'+
+      '<div class="addr-body">'+
+        '<div class="addr-raw" title="'+esc(a.raw)+'">'+esc(a.raw)+'</div>'+
+        (km?'<div class="addr-km">↑ '+km+'</div>':'')+
+        (a.lat!=null?'<div class="addr-meta">📍 Geocodat</div>':'<div class="addr-meta" style="color:var(--red)">⚠ Negăsit – adaugă orașul</div>')+
+      '</div>'+
+      '<button class="ic-btn" onclick="toggleDone('+i+')" title="'+(isDone?'Marchează nelivrat':'Livrat ✓')+'">'+(isDone?'↩️':'✓')+'</button>'+
+      '<button class="ic-btn del" onclick="removeAddr('+i+')">×</button>'+
+    '</div>';
   }).join('');
 }
 
-function toggleDone(i) { if(doneSet.has(i)) doneSet.delete(i); else doneSet.add(i); renderList(); redrawMarkers(); }
+function toggleDone(i){ if(doneSet.has(i)) doneSet.delete(i); else doneSet.add(i); renderList(); redrawMarkers(); }
 
-function removeAddr(i) {
-  addresses.splice(i, 1); optimizedOrder = []; doneSet = new Set();
-  document.getElementById('shareRow').style.display = 'none';
-  document.getElementById('kmBadge').style.display = 'none';
+function removeAddr(i){
+  addresses.splice(i,1); optimizedOrder=[]; doneSet=new Set();
+  document.getElementById('shareRow').style.display='none';
+  document.getElementById('kmBadge').style.display='none';
   renderList(); clearMap();
 }
 
-function clearAll() {
-  if (addresses.length && !confirm('Ștergi toate adresele?')) return;
-  addresses = []; optimizedOrder = []; doneSet = new Set(); startPoint = null;
-  document.getElementById('startAddr').value = '';
-  document.getElementById('shareRow').style.display = 'none';
-  document.getElementById('kmBadge').style.display = 'none';
+function clearAll(){
+  if(addresses.length&&!confirm('Ștergi toate adresele?')) return;
+  addresses=[];optimizedOrder=[];doneSet=new Set();startPoint=null;
+  document.getElementById('startAddr').value='';
+  document.getElementById('shareRow').style.display='none';
+  document.getElementById('kmBadge').style.display='none';
   renderList(); clearMap();
 }
 
-// ─── ADD ADDRESS ─────────────────────────────────────────
-async function addAddress() {
-  const inp = document.getElementById('newAddr');
-  const raw = inp.value.trim();
-  if (!raw) return;
-  inp.value = ''; inp.disabled = true;
-  optimizedOrder = []; doneSet = new Set();
-
-  let query = raw;
-  const startVal = document.getElementById('startAddr').value.trim();
-  const cityHint = detectCity(startVal) || detectCity(addresses.map(a => a.label || '').join(' '));
-  if (cityHint && !raw.includes(',') && !detectCity(raw)) query = raw + ', ' + cityHint;
-
-  const geo = await geocode(query);
-  addresses.push({ raw, lat: geo ? geo.lat : null, lng: geo ? geo.lng : null, label: geo ? geo.label : '' });
-  inp.disabled = false; inp.focus();
+// ── ADD ADDRESS ──────────────────────────────────────────
+async function addAddress(){
+  const inp=document.getElementById('newAddr');
+  const raw=inp.value.trim(); if(!raw) return;
+  inp.value=''; inp.disabled=true;
+  optimizedOrder=[]; doneSet=new Set();
+  let query=raw;
+  const sv=document.getElementById('startAddr').value.trim();
+  const cityHint=detectCity(sv)||detectCity(addresses.map(a=>a.label||'').join(' '));
+  if(cityHint&&!raw.includes(',')&&!detectCity(raw)) query=raw+', '+cityHint;
+  const geo=await geocode(query);
+  addresses.push({raw,lat:geo?geo.lat:null,lng:geo?geo.lng:null,label:geo?geo.label:''});
+  inp.disabled=false; inp.focus();
   renderList();
-  if (!geo) toast('Adresa "' + raw + '" nu a fost găsită. Adaugă orașul (ex: ..., Pitești)', 'error');
-  else toast('Adresă adăugată ✓', 'success');
+  if(!geo) toast('Adresa nu a fost găsită. Adaugă orașul (ex: ..., Pitești)','err');
+  else toast('Adresă adăugată ✓','ok');
 }
 
-function detectCity(text) {
-  const cities = ['Pitești','Pitesti','Rm Vâlcea','Rm Valcea','Râmnicu Vâlcea','Ramnicu Valcea',
+function detectCity(text){
+  const c=['Pitești','Pitesti','Rm Vâlcea','Rm Valcea','Râmnicu Vâlcea','Ramnicu Valcea',
     'București','Bucuresti','Cluj-Napoca','Cluj','Timișoara','Timisoara','Iași','Iasi',
     'Craiova','Brașov','Brasov','Galați','Galati','Constanța','Constanta',
-    'Ploiești','Ploiesti','Sibiu','Bacău','Bacau','Arad','Oradea','Suceava','Deva','Alba Iulia'];
-  for (const c of cities) if (text.toLowerCase().includes(c.toLowerCase())) return c;
+    'Ploiești','Ploiesti','Sibiu','Bacău','Bacau','Arad','Oradea','Suceava','Alba Iulia'];
+  for(const x of c) if(text.toLowerCase().includes(x.toLowerCase())) return x;
   return null;
 }
 
-// ─── OPTIMIZE ────────────────────────────────────────────
-async function optimizeRoute() {
-  const valid = addresses.filter(a => a.lat != null);
-  if (valid.length < 2) { toast('Adaugă cel puțin 2 adrese geocodate corect.', 'error'); return; }
-
-  const btn = document.getElementById('btnOptimize');
-  btn.disabled = true; btn.textContent = '⏳ Se optimizează…';
-  setLoading(15);
-
-  try {
-    const startVal = document.getElementById('startAddr').value.trim();
-    if (startVal) {
-      await sleep(300);
-      const g = await geocode(startVal);
-      startPoint = g || null;
-      if (!g) toast('Start negăsit – se pleacă de la prima adresă.', 'error');
-    } else { startPoint = null; }
-
-    setLoading(40);
-    const validIdx = [], validPts = [];
-    addresses.forEach((a, i) => { if (a.lat != null) { validIdx.push(i); validPts.push({lat:a.lat,lng:a.lng}); } });
-    const origin = startPoint || validPts[0];
-
-    setLoading(60);
-    let order = nearestNeighbour(validPts, origin);
-    setLoading(75);
-    order = twoOpt(order, validPts, origin);
-    setLoading(90);
-
-    optimizedOrder = order.map(k => validIdx[k]);
-
-    let totalKm = 0;
-    if (optimizedOrder.length > 0) {
-      totalKm += dist(origin, addresses[optimizedOrder[0]]);
-      for (let i = 0; i < optimizedOrder.length-1; i++) totalKm += dist(addresses[optimizedOrder[i]], addresses[optimizedOrder[i+1]]);
+// ── OPTIMIZE ─────────────────────────────────────────────
+async function optimizeRoute(){
+  const valid=addresses.filter(a=>a.lat!=null);
+  if(valid.length<2){toast('Adaugă cel puțin 2 adrese geocodate.','err');return;}
+  const btn=document.getElementById('btnOpt');
+  btn.disabled=true; btn.textContent='⏳ Se optimizează…'; setLoad(15);
+  try{
+    const sv=document.getElementById('startAddr').value.trim();
+    if(sv){ await sleep(300); const g=await geocode(sv); startPoint=g||null; if(!g) toast('Start negăsit – se pleacă de la prima adresă.','err'); }
+    else startPoint=null;
+    setLoad(40);
+    const vidx=[],vpts=[];
+    addresses.forEach((a,i)=>{if(a.lat!=null){vidx.push(i);vpts.push({lat:a.lat,lng:a.lng});}});
+    const origin=startPoint||vpts[0];
+    setLoad(60);
+    let order=nn(vpts,origin);
+    setLoad(75);
+    order=twoOpt(order,vpts,origin);
+    setLoad(90);
+    optimizedOrder=order.map(k=>vidx[k]);
+    let km=0;
+    if(optimizedOrder.length){
+      km+=dist(origin,addresses[optimizedOrder[0]]);
+      for(let i=0;i<optimizedOrder.length-1;i++) km+=dist(addresses[optimizedOrder[i]],addresses[optimizedOrder[i+1]]);
     }
-    totalKm = parseFloat(totalKm.toFixed(1));
-
-    const totalMin = Math.round((totalKm/30)*60 + optimizedOrder.length*4);
-    const h = Math.floor(totalMin/60), m = totalMin%60;
-
-    document.getElementById('statKm').textContent = totalKm + ' km';
-    document.getElementById('statStops').textContent = optimizedOrder.length + ' opriri';
-    document.getElementById('statTime').textContent = h ? h+'h '+m+'min' : m+' min';
-    document.getElementById('statsOverlay').style.display = 'block';
-    document.getElementById('kmBadge').textContent = totalKm + ' km';
-    document.getElementById('kmBadge').style.display = 'block';
-    document.getElementById('shareRow').style.display = 'flex';
-
-    renderList(); drawMap(origin); setLoading(100);
-    toast('Optimizat! ' + totalKm + ' km, ' + optimizedOrder.length + ' opriri.', 'success');
-  } catch(e) {
-    console.error(e);
-    toast('Eroare: ' + e.message, 'error');
-  } finally {
-    btn.disabled = false; btn.textContent = '⚡ Optimizează traseul';
+    km=parseFloat(km.toFixed(1));
+    const min=Math.round((km/30)*60+optimizedOrder.length*4);
+    const h=Math.floor(min/60),m=min%60;
+    document.getElementById('sKm').textContent=km+' km';
+    document.getElementById('sStops').textContent=optimizedOrder.length+' opriri';
+    document.getElementById('sTime').textContent=h?h+'h '+m+'min':m+' min';
+    document.getElementById('mapStats').style.display='block';
+    document.getElementById('kmBadge').textContent=km+' km';
+    document.getElementById('kmBadge').style.display='block';
+    document.getElementById('shareRow').style.display='flex';
+    renderList(); drawMap(origin); setLoad(100);
+    toast('Optimizat! '+km+' km, '+optimizedOrder.length+' opriri.','ok');
+    // pe mobil, trece automat la tab Hartă
+    if(window.innerWidth<=768) switchTab('harta');
+  }catch(e){
+    console.error(e); toast('Eroare: '+e.message,'err');
+  }finally{
+    btn.disabled=false; btn.textContent='⚡ Optimizează traseul';
   }
 }
 
-// ─── MAP ─────────────────────────────────────────────────
-function initMap(center) {
-  if (map) return;
-  document.getElementById('emptyMap').style.display = 'none';
-  map = L.map('map').setView([center.lat, center.lng], 13);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'© OSM © CartoDB', maxZoom:19 }).addTo(map);
+// ── MAP ──────────────────────────────────────────────────
+function initMap(center){
+  if(map) return;
+  document.getElementById('mapEmpty').style.display='none';
+  map=L.map('map').setView([center.lat,center.lng],13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CartoDB',maxZoom:19}).addTo(map);
 }
-function clearMap() {
-  if (!map) return;
-  markers.forEach(m => map.removeLayer(m)); markers = [];
-  if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
-  document.getElementById('statsOverlay').style.display = 'none';
+function clearMap(){
+  if(!map) return;
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  if(routeLine){map.removeLayer(routeLine);routeLine=null;}
+  document.getElementById('mapStats').style.display='none';
 }
-function makeIcon(label, color) {
-  const t = String(label), fs = t.length > 2 ? '9' : '12';
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36"><path d="M14 0C6.3 0 0 6.3 0 14c0 10.5 14 22 14 22S28 24.5 28 14C28 6.3 21.7 0 14 0z" fill="'+color+'"/><text x="14" y="19" text-anchor="middle" font-size="'+fs+'" font-family="Inter,sans-serif" font-weight="700" fill="white">'+t+'</text></svg>';
+function makeIcon(label,color){
+  const t=String(label),fs=t.length>2?'9':'12';
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36"><path d="M14 0C6.3 0 0 6.3 0 14c0 10.5 14 22 14 22S28 24.5 28 14C28 6.3 21.7 0 14 0z" fill="'+color+'"/><text x="14" y="19" text-anchor="middle" font-size="'+fs+'" font-family="Inter,sans-serif" font-weight="700" fill="white">'+t+'</text></svg>';
   return L.divIcon({html:svg,className:'',iconSize:[28,36],iconAnchor:[14,36],popupAnchor:[0,-36]});
 }
-function redrawMarkers() {
-  if (!map || !optimizedOrder.length) return;
-  markers.forEach(m => map.removeLayer(m)); markers = [];
-  if (startPoint) {
-    markers.push(L.marker([startPoint.lat,startPoint.lng],{icon:makeIcon('🏠','#3ecf6e')}).addTo(map).bindPopup('<b>Start</b>'));
-  }
-  optimizedOrder.forEach((addrIdx, pos) => {
-    const a = addresses[addrIdx];
-    if (!a.lat) return;
-    const m = L.marker([a.lat,a.lng],{icon:makeIcon(pos+1, doneSet.has(addrIdx)?'#7a82a0':'#4f8ef7')})
-      .addTo(map).bindPopup('<b>Oprire '+(pos+1)+'</b><br>'+escHtml(a.raw));
-    markers.push(m);
+function redrawMarkers(){
+  if(!map||!optimizedOrder.length) return;
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  if(startPoint) markers.push(L.marker([startPoint.lat,startPoint.lng],{icon:makeIcon('🏠','#3ecf6e')}).addTo(map).bindPopup('<b>Start</b>'));
+  optimizedOrder.forEach((ai,pos)=>{
+    const a=addresses[ai]; if(!a.lat) return;
+    markers.push(L.marker([a.lat,a.lng],{icon:makeIcon(pos+1,doneSet.has(ai)?'#7a82a0':'#4f8ef7')}).addTo(map).bindPopup('<b>Oprire '+(pos+1)+'</b><br>'+esc(a.raw)));
   });
 }
-function drawMap(origin) {
+function drawMap(origin){
   initMap(origin); clearMap(); redrawMarkers();
-  const ll = [];
-  if (startPoint) ll.push([startPoint.lat,startPoint.lng]);
-  optimizedOrder.forEach(i => { const a=addresses[i]; if(a.lat) ll.push([a.lat,a.lng]); });
-  if (ll.length > 1) {
-    routeLine = L.polyline(ll,{color:'#4f8ef7',weight:3,opacity:.85,dashArray:'8 5'}).addTo(map);
+  const ll=[];
+  if(startPoint) ll.push([startPoint.lat,startPoint.lng]);
+  optimizedOrder.forEach(i=>{const a=addresses[i];if(a.lat) ll.push([a.lat,a.lng]);});
+  if(ll.length>1){
+    routeLine=L.polyline(ll,{color:'#4f8ef7',weight:3,opacity:.85,dashArray:'8 5'}).addTo(map);
     map.fitBounds(routeLine.getBounds(),{padding:[40,40]});
   }
 }
 
-// ─── SHARE / EXPORT ──────────────────────────────────────
-function buildRouteText() {
-  let txt = '🚚 TRASEU OPTIMIZAT\n══════════════════\n';
-  const sv = document.getElementById('startAddr').value.trim();
-  if (sv) txt += '▶ Start: ' + sv + '\n';
-  optimizedOrder.forEach((i, pos) => { txt += '\n' + (pos+1) + '. ' + addresses[i].raw; });
-  txt += '\n\n──────────────────';
-  txt += '\nTotal: ' + document.getElementById('statKm').textContent;
-  txt += '\nTimp estimat: ' + document.getElementById('statTime').textContent;
-  return txt;
+// ── SHARE ────────────────────────────────────────────────
+function buildText(){
+  let t='🚚 TRASEU OPTIMIZAT\n══════════════════\n';
+  const sv=document.getElementById('startAddr').value.trim();
+  if(sv) t+='▶ Start: '+sv+'\n';
+  optimizedOrder.forEach((i,pos)=>{ t+='\n'+(pos+1)+'. '+addresses[i].raw; });
+  t+='\n\n──────────────────';
+  t+='\nTotal: '+document.getElementById('sKm').textContent;
+  t+='\nTimp estimat: '+document.getElementById('sTime').textContent;
+  return t;
 }
-
-function copyRoute() {
-  const txt = buildRouteText();
-  navigator.clipboard.writeText(txt)
-    .then(() => toast('Copiat în clipboard! 📋', 'success'))
-    .catch(() => prompt('Copiază traseul:', txt));
-  document.getElementById('qrModal').style.display = 'none';
+function copyRoute(){
+  const t=buildText();
+  navigator.clipboard.writeText(t).then(()=>toast('Copiat în clipboard! 📋','ok')).catch(()=>prompt('Copiază:',t));
 }
-
-function shareWhatsApp() {
-  const txt = buildRouteText();
-  const url = 'https://wa.me/?text=' + encodeURIComponent(txt);
-  window.open(url, '_blank');
-  document.getElementById('qrModal').style.display = 'none';
+function shareWA(){
+  window.open('https://wa.me/?text='+encodeURIComponent(buildText()),'_blank');
 }
-
-function showQR() {
-  const txt = buildRouteText();
-  const modal = document.getElementById('qrModal');
-  const canvas = document.getElementById('qrCanvas');
-  canvas.innerHTML = '';
-  modal.style.display = 'flex';
-
-  // Encode as data URI for QR (plain text, max ~500 chars for readability)
-  let qrText = txt;
-  if (qrText.length > 500) {
-    // Shorten to just the addresses list
-    qrText = '🚚 TRASEU\n';
-    const sv = document.getElementById('startAddr').value.trim();
-    if (sv) qrText += '▶ ' + sv + '\n';
-    optimizedOrder.forEach((i, pos) => { qrText += (pos+1) + '. ' + addresses[i].raw + '\n'; });
-    qrText += document.getElementById('statKm').textContent;
+function showQR(){
+  const box=document.getElementById('qrBox'); box.innerHTML='';
+  document.getElementById('qrOverlay').style.display='flex';
+  let txt=buildText();
+  if(txt.length>600){
+    txt='🚚 TRASEU\n';
+    const sv=document.getElementById('startAddr').value.trim();
+    if(sv) txt+='▶ '+sv+'\n';
+    optimizedOrder.forEach((i,pos)=>{ txt+=(pos+1)+'. '+addresses[i].raw+'\n'; });
+    txt+=document.getElementById('sKm').textContent;
   }
-
-  try {
-    new QRCode(canvas, {
-      text: qrText,
-      width: 240,
-      height: 240,
-      colorDark: '#0f1117',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
-    });
-  } catch(e) {
-    canvas.innerHTML = '<p style="color:var(--red);font-size:13px;">Traseul e prea lung pentru QR. Folosește WhatsApp sau copierea.</p>';
+  try{
+    new QRCode(box,{text:txt,width:220,height:220,colorDark:'#0f1117',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+  }catch(e){
+    box.innerHTML='<p style="color:var(--red);font-size:13px;padding:20px;">Traseul e prea lung pentru QR. Folosește WhatsApp sau copierea.</p>';
   }
 }
+function closeQR(e){ if(e.target===document.getElementById('qrOverlay')) closeQRdirect(); }
+function closeQRdirect(){ document.getElementById('qrOverlay').style.display='none'; }
 
-function closeQR(e) {
-  if (e.target === document.getElementById('qrModal')) document.getElementById('qrModal').style.display = 'none';
-}
-
-// ─── EVENTS ──────────────────────────────────────────────
-document.getElementById('newAddr').addEventListener('keydown', e => { if(e.key==='Enter') addAddress(); });
+// ── EVENTS ───────────────────────────────────────────────
+document.getElementById('newAddr').addEventListener('keydown',e=>{ if(e.key==='Enter') addAddress(); });
 </script>
 </body>
 </html>
